@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{51b58894-934b-4fae-887a-b7d236f206c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TT">
+      <UniqueIdentifier>{c84f60e3-4979-42b6-ba94-2b28d7930981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Classes">
+      <UniqueIdentifier>{7aa25ca7-0535-4740-8f05-eeb55e9f5613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Engine">
+      <UniqueIdentifier>{1795958b-1ddd-463a-9a30-35ed7f61a125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Engine\Private">
+      <UniqueIdentifier>{6e7ef8b6-2efa-4d3f-a1bf-106958b2544a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Engine\Public">
+      <UniqueIdentifier>{7b79dd06-3995-4535-8640-d46d89f457b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI">
+      <UniqueIdentifier>{7e064d90-b8a6-48ab-93b9-316a41404efd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI\Private">
+      <UniqueIdentifier>{7a0e2317-5a8a-460f-8f6f-262f6101683e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI\Public">
+      <UniqueIdentifier>{8d7f371c-518b-412e-8329-39005d0a692f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shader">
+      <UniqueIdentifier>{d5f9ed58-b915-4fd9-a27b-f965fd7c47cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TT\Pubilc">
+      <UniqueIdentifier>{88e51726-93b6-43f2-868e-f0127dfd70a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TT\Private">
+      <UniqueIdentifier>{197fdfa7-35bb-40d9-8252-eee03f94df17}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Source\Classes\DPMath.h">
+      <Filter>Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Engine\Public\DPD3D.h">
+      <Filter>Engine\Engine\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Engine\Public\DPMesh.h">
+      <Filter>Engine\Engine\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Classes\DPCore.h">
+      <Filter>Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Classes\DPSmartPointer.h">
+      <Filter>Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Classes\DPList.h">
+      <Filter>Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Classes\DPArray.h">
+      <Filter>Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Engine\Public\DPActor.h">
+      <Filter>Engine\Engine\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Engine\Public\DPEngine.h">
+      <Filter>Engine\Engine\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Engine\Public\DPWindows.h">
+      <Filter>Engine\Engine\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Engine\Public\DPTimer.h">
+      <Filter>Engine\Engine\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shader\VSShader.hlsl">
+      <Filter>Engine\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\PSShader.hlsl">
+      <Filter>Engine\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine\Source\Engine\Private\DPMesh.cpp">
+      <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Engine\Private\DPD3D.cpp">
+      <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Engine\Private\TrialMain.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Engine\Private\LaunchWindow.cpp">
+      <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Engine\Private\DPEngine.cpp">
+      <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Engine\Private\DPWindows.cpp">
+      <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
