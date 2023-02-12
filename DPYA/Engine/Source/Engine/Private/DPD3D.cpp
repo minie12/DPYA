@@ -1,4 +1,5 @@
 
+#include "DPCore.h"
 #include "DPD3D.h"
 
 struct HLSLBuffer
@@ -118,13 +119,13 @@ bool DPD3D::Initialize(HWND HWnd, const float InWidth, const float InHeight)
 	}
 
 	// Create BackBuffer -----------------------------------------------------------------------------------
-	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	DeviceContext->OMSetRenderTargets(1, &RenderTargetView, 0);
-
 	ID3D11Texture2D* BackBufferPtr;
 	HResult = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferPtr);
 	if (FAILED(HResult))
 	{
+		if (nullptr != BackBufferPtr)
+			BackBufferPtr->Release();
+
 		return false;
 	}
 
@@ -132,6 +133,9 @@ bool DPD3D::Initialize(HWND HWnd, const float InWidth, const float InHeight)
 	HResult = Device->CreateRenderTargetView(BackBufferPtr, NULL, &RenderTargetView);
 	if (FAILED(HResult))
 	{
+		if (nullptr != BackBufferPtr)
+			BackBufferPtr->Release();
+
 		return false;
 	}
 
@@ -142,22 +146,31 @@ bool DPD3D::Initialize(HWND HWnd, const float InWidth, const float InHeight)
 	HResult = D3DCompileFromFile(L"Engine/Shader/VSShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &VSBlob, &ErrorBlob);
 	if (FAILED(HResult))
 	{
+		SafeDelete(VSBlob);
+		SafeDelete(ErrorBlob);
+		return false;
+	}
+	HResult = Device->CreateVertexShader(VSBlob->GetBufferPointer(), VSBlob->GetBufferSize(), NULL, &VertexShader);
+	if (FAILED(HResult))
+	{
+		SafeDelete(VSBlob);
+		SafeDelete(ErrorBlob);
 		return false;
 	}
 	HResult = D3DCompileFromFile(L"Engine/Shader/PSShader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &PSBlob, &ErrorBlob);
 	if (FAILED(HResult))
 	{
-		return false;
-	}
-
-	HResult = Device->CreateVertexShader(VSBlob->GetBufferPointer(), VSBlob->GetBufferSize(), NULL, &VertexShader);
-	if (FAILED(HResult))
-	{
+		SafeDelete(VSBlob);
+		SafeDelete(PSBlob);
+		SafeDelete(ErrorBlob);
 		return false;
 	}
 	HResult = Device->CreatePixelShader(PSBlob->GetBufferPointer(), PSBlob->GetBufferSize(), NULL, &PixelShader);
 	if (FAILED(HResult))
 	{
+		SafeDelete(VSBlob);
+		SafeDelete(PSBlob);
+		SafeDelete(ErrorBlob);
 		return false;
 	}
 
@@ -174,26 +187,27 @@ bool DPD3D::Initialize(HWND HWnd, const float InWidth, const float InHeight)
 	{
 		return false;
 	}
-	DeviceContext->IASetInputLayout(InputLayout);
+
+	/*DeviceContext->IASetInputLayout(InputLayout);*/
 
 	VSBlob->Release(); PSBlob->Release();
 
-	DeviceContext->VSSetShader(VertexShader, 0, 0);
-	DeviceContext->PSSetShader(PixelShader, 0, 0);
+	//DeviceContext->VSSetShader(VertexShader, 0, 0);
+	//DeviceContext->PSSetShader(PixelShader, 0, 0);
 
 	// Create Constant Buffer (Matrix) --------------------------------------------------------------------
-	D3D11_BUFFER_DESC ConstantDesc;
-	ZeroMemory(&ConstantDesc, sizeof(D3D11_BUFFER_DESC));
-	ConstantDesc.Usage = D3D11_USAGE_DYNAMIC;
-	ConstantDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	ConstantDesc.ByteWidth = sizeof(HLSLBuffer);
-	ConstantDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//D3D11_BUFFER_DESC ConstantDesc;
+	//ZeroMemory(&ConstantDesc, sizeof(D3D11_BUFFER_DESC));
+	//ConstantDesc.Usage = D3D11_USAGE_DYNAMIC;
+	//ConstantDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//ConstantDesc.ByteWidth = sizeof(HLSLBuffer);
+	//ConstantDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	HResult = Device->CreateBuffer(&ConstantDesc, nullptr, &ConstantBuffer);
-	if (FAILED(HResult))
-	{
-		return false;
-	}
+	//HResult = Device->CreateBuffer(&ConstantDesc, nullptr, &ConstantBuffer);
+	//if (FAILED(HResult))
+	//{
+	//	return false;
+	//}
 
 	//// Load Default Texture -------------------------------------------------------------------------------
 	//Device->CreateShaderResourceView();
@@ -208,20 +222,22 @@ bool DPD3D::Initialize(HWND HWnd, const float InWidth, const float InHeight)
 
 	// Set Viewport ----------------------------------------------------------------------------------------
 	D3D11_VIEWPORT Viewport;
-
+	Viewport.TopLeftX = 0.0f;
+	Viewport.TopLeftY = 0.0f;
 	Viewport.Width = (float)InWidth;
 	Viewport.Height = (float)InHeight;
 	Viewport.MinDepth = 0.0f;
 	Viewport.MaxDepth = 1.0f;
-	Viewport.TopLeftX = 0.0f;
-	Viewport.TopLeftY = 0.0f;
+
 
 	// Create the viewport.
-	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	DeviceContext->RSSetViewports(1, &Viewport);
 	//DeviceContext->PSSetShaderResources();
-	//DeviceContext->OMSetRenderTargets();
+
+	// Bind the render target view and depth stencil buffer to the output render pipeline.
+	/*DeviceContext->OMSetRenderTargets(1, &RenderTargetView, 0);*/
 
 
 	ProjectionTM = DirectX::XMFLOAT4X4{ Matrix4x4::ScaleMatrix(fabsf(InWidth*0.5f), fabsf(InHeight*0.5f)).ToFloats() };
@@ -250,16 +266,14 @@ bool DPD3D::Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, cons
 {
 	HRESULT HResult;
 
-	DeviceContext->IASetPrimitiveTopology(InTopology);
-
 	ID3D11Buffer* VertexBuffer;
 
 	D3D11_BUFFER_DESC VertexDesc;
 	ZeroMemory(&VertexDesc, sizeof(D3D11_BUFFER_DESC));
-	VertexDesc.Usage = D3D11_USAGE_DYNAMIC;
-	VertexDesc.ByteWidth = sizeof(VertexData)*Vertices.Num();
+	VertexDesc.Usage = D3D11_USAGE_DEFAULT;
+	VertexDesc.ByteWidth = sizeof(VertexData) * Vertices.Num();
 	VertexDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VertexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//VertexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	D3D11_SUBRESOURCE_DATA VertexData;
 	VertexData.pSysMem = Vertices.Get();
@@ -269,38 +283,49 @@ bool DPD3D::Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, cons
 	HResult = Device->CreateBuffer(&VertexDesc, &VertexData, &VertexBuffer);
 	if (FAILED(HResult))
 	{
+		if (nullptr != VertexBuffer)
+			VertexBuffer->Release();
+
 		return false;
 	}
 
-	ID3D11Buffer* IndexBuffer;
+	//ID3D11Buffer* IndexBuffer;
 
-	D3D11_BUFFER_DESC IndexDesc;
-	ZeroMemory(&IndexDesc, sizeof(D3D11_BUFFER_DESC));
-	IndexDesc.Usage = D3D11_USAGE_DYNAMIC;
-	IndexDesc.ByteWidth = sizeof(unsigned int)*Indices.Num();
-	IndexDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	IndexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//D3D11_BUFFER_DESC IndexDesc;
+	//ZeroMemory(&IndexDesc, sizeof(D3D11_BUFFER_DESC));
+	//IndexDesc.Usage = D3D11_USAGE_DEFAULT;
+	//IndexDesc.ByteWidth = sizeof(unsigned int)*3;
+	//IndexDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	////IndexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	D3D11_SUBRESOURCE_DATA IndexData;
-	IndexData.pSysMem = Indices.Get();
-	IndexData.SysMemPitch = 0;
-	IndexData.SysMemSlicePitch = 0;
+	//unsigned int* trialIndex = new unsigned int[3]{ 0, 1, 2 };
+	//D3D11_SUBRESOURCE_DATA IndexData;
+	//IndexData.pSysMem = trialIndex;
+	//IndexData.SysMemPitch = 0;
+	//IndexData.SysMemSlicePitch = 0;
 
-	HResult = Device->CreateBuffer(&IndexDesc, &IndexData, &IndexBuffer);
-	if (FAILED(HResult))
-	{
-		return false;
-	}
+	//HResult = Device->CreateBuffer(&IndexDesc, &IndexData, &IndexBuffer);
+	//if (FAILED(HResult))
+	//{
+	//	return false;
+	//}
+
+	DeviceContext->OMSetRenderTargets(1, &RenderTargetView, 0);
+	DeviceContext->IASetPrimitiveTopology(InTopology);
+	DeviceContext->IASetInputLayout(InputLayout);
+
+	DeviceContext->VSSetShader(VertexShader, 0, 0);
+	DeviceContext->PSSetShader(PixelShader, 0, 0);
 
 	UINT Stride = sizeof(VertexData);
 	UINT Offset = 0;
 
 	DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &Offset);
-	DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, Offset);
+	//DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, Offset);
 
-	DeviceContext->DrawIndexed(Indices.Num(), 0, 0);
+	DeviceContext->Draw(Vertices.Num(), 0);
 
-	return false;
+	return true;
 }
 
 DPD3D* DPD3D::Get()

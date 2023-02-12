@@ -88,9 +88,6 @@
     <ClCompile Include="Engine\Source\Engine\Private\DPD3D.cpp">
       <Filter>Engine\Engine\Private</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Source\Engine\Private\TrialMain.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Source\Engine\Private\LaunchWindow.cpp">
       <Filter>Engine\Engine\Private</Filter>
     </ClCompile>

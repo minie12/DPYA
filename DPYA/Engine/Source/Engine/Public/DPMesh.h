@@ -25,6 +25,15 @@ struct VertexData
 		, Color(InColor)
 		, UV(InUV)
 	{}
+
+	VertexData& operator=(const VertexData& InData)
+	{
+		Position = InData.Position;
+		Color = InData.Color;
+		UV = InData.UV;
+
+		return *this;
+	}
 };
 
 class DPMesh

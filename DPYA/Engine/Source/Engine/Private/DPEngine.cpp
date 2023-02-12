@@ -50,8 +50,8 @@ void DPEngine::DrawTick()
 {
 	D3D->ClearView();
 
-	
-	D3D->Draw(Matrix4x4::IdentityMatrix(), Matrix4x4::IdentityMatrix(), Mesh->GetVertices(), Mesh->GetIndices(), D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	if (!D3D->Draw(Matrix4x4::IdentityMatrix(), Matrix4x4::IdentityMatrix(), Mesh->GetVertices(), Mesh->GetIndices(), D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST))
+		return;
 
 	// GameEngine Draw
 	// UIManager Draw

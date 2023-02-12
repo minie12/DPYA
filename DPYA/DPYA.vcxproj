@@ -194,7 +194,6 @@
     <ClCompile Include="Engine\Source\Engine\Private\DPEngine.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\DPMesh.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\LaunchWindow.cpp" />
-    <ClCompile Include="Engine\Source\Engine\Private\TrialMain.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\DPWindows.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
