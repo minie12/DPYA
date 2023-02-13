@@ -87,7 +87,7 @@ void DPCircleMesh::CreateAtCenter(float InWidth, float InHeight, const Vector4& 
 	for (unsigned int Index = 0; Index < VertexCount; Index++)
 	{
 		float Radian = RadianPerCount * Index;
-		DrawVertices.Add(VertexData(Vector3( InX + cosf(Radian) * HalfWidth, InY + sinf(Radian) * HalfHeight, 0.0f), InColor, Vector2(0.5f*(cosf(Radian)+1), 0.5f*(sinf(Radian)+1))));
+		DrawVertices.Add(VertexData(Vector3( InX + cosf(Radian) * HalfWidth, InY - sinf(Radian) * HalfHeight, 0.0f), InColor, Vector2(0.5f*(cosf(Radian)+1), 0.5f*(-sinf(Radian)+1))));
 	}
 
 	for (unsigned int Index = 1; Index < VertexCount-1; Index++)
@@ -114,7 +114,7 @@ void DPCircleMesh::CreateAtTopLeft(float InWidth, float InHeight, const Vector4 
 	for (unsigned int Index = 0; Index < VertexCount; Index++)
 	{
 		float Radian = RadianPerCount * Index;
-		DrawVertices.Add(VertexData(Vector3(CenterX + cosf(Radian) * HalfWidth, CenterY + sinf(Radian) * HalfHeight, 0.0f), InColor, Vector2(0.5f*(cosf(Radian) + 1), 0.5f*(sinf(Radian) + 1))));
+		DrawVertices.Add(VertexData(Vector3(CenterX + cosf(Radian) * HalfWidth, CenterY - sinf(Radian) * HalfHeight, 0.0f), InColor, Vector2(0.5f*(cosf(Radian) + 1), 0.5f*(-sinf(Radian) + 1))));
 	}
 
 	for (unsigned int Index = 1; Index < VertexCount - 1; Index++)

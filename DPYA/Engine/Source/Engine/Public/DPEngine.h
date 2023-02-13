@@ -6,7 +6,7 @@
 #include "DPWindows.h"
 class DPD3D;
 class DPTimer;
-class DPTriangleMesh;
+class DPCircleMesh;
 
 class DPEngine
 {
@@ -23,5 +23,5 @@ private:
 	DPWindows* Windows;
 	DPTimer* Timer;
 
-	DPTriangleMesh* Mesh;
+	DPCircleMesh* Mesh;
 };

@@ -67,8 +67,8 @@ public:
 	{
 		if (!IsValidIndex(InIndex))
 		{
-			std::cout << "DPArray: Insert index is larger than array size" << std::endl;
-			exit(1);
+			// NOT VALID
+			return;
 		}
 
 		unsigned int Index = ArrayCount++;
@@ -95,6 +95,6 @@ public:
 
 private:
 	T* Arr;
-	int MaxSize;
+	unsigned int MaxSize;
 	unsigned int ArrayCount;
 };

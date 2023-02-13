@@ -21,10 +21,10 @@ public:
 		INT64 PresentCount;
 		QueryPerformanceCounter((LARGE_INTEGER*)&PresentCount);
 
-		float DelaTime = (PresentCount - PrevCount) * TimeScale;
+		double DelaTime = (PresentCount - PrevCount) * TimeScale;
 		PrevCount = PresentCount;
 
-		return DelaTime;
+		return static_cast<float>(DelaTime);
 	}
 
 private:

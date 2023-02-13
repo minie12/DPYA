@@ -8,9 +8,10 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 
+#include "DPArray.h"
 #include "DPMath.h"
 
-#include "DPMesh.h"
+struct VertexData;
 
 class DPD3D {
 public:
@@ -19,8 +20,7 @@ public:
 
 	~DPD3D();
 
-	// function prototypes
-	bool Initialize(HWND HNWnd, const float InWidth, const float InHeight);    // sets up and initializes Direct3D
+	bool Initialize(HWND HNWnd, const unsigned int InWidth, const unsigned int InHeight);
 
 	void ClearView();
 	bool PresentView();
@@ -37,7 +37,7 @@ private:
 
 	static DPD3D* Instance;
 
-	int ScreenWidth, ScreenHeight;
+	unsigned int ScreenWidth, ScreenHeight;
 
 	ID3D11Device* Device;                   
 	ID3D11DeviceContext* DeviceContext;           

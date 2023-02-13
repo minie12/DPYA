@@ -27,8 +27,8 @@ bool DPEngine::InitEngine(HINSTANCE HInstance)
 
 void DPEngine::Loop()
 {
-	Mesh = new DPTriangleMesh();
-	Mesh->CreateAtCenter(2.f, 2.f, Vector4(0.f, 1.f, 0.f, 0.f));
+	Mesh = new DPCircleMesh();
+	Mesh->CreateAtCenter(2.f, 2.f, Vector4(1.f, 1.f, 0.f, 0.f));
 
 	while (true)
 	{
