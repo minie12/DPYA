@@ -4,6 +4,13 @@
 #include "DPMath.h"
 #include "DPArray.h"
 
+enum MeshShape
+{
+	MS_Triangle = 0,
+	MS_Rectangle,
+	MS_Ellipse,
+};
+
 struct VertexData
 {
 	Vector3 Position;
@@ -37,9 +44,11 @@ class DPMesh
 public:
 	DPMesh();
 	virtual ~DPMesh() { }
+	DPMesh(const DPMesh& InMesh);
 
 	virtual void CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) = 0;
 	virtual void CreateAtTopLeft(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) = 0;
+	virtual MeshShape GetShape() = 0;
 
 	inline const DPArray<VertexData>& GetVertices() const { return DrawVertices; }
 	inline const DPArray<unsigned int>& GetIndices() const { return DrawIndices; }
@@ -66,9 +75,11 @@ class DPTriangleMesh : public DPMesh
 public:
 	DPTriangleMesh() {}
 	~DPTriangleMesh() {}
+	DPTriangleMesh& operator=(const DPTriangleMesh& InMesh);
 
 	void CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) override;
 	void CreateAtTopLeft(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) override;
+	MeshShape GetShape() override { return MeshShape::MS_Rectangle; }
 };
 
 class DPRectangleMesh : public DPMesh
@@ -76,17 +87,21 @@ class DPRectangleMesh : public DPMesh
 public:
 	DPRectangleMesh() {}
 	~DPRectangleMesh() {}
+	DPRectangleMesh& operator=(const DPRectangleMesh& InMesh);
 
 	void CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) override;
 	void CreateAtTopLeft(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) override;
+	MeshShape GetShape() override { return MeshShape::MS_Triangle; }
 };
 
-class DPCircleMesh : public DPMesh
+class DPEllipseMesh : public DPMesh
 {
 public:
-	DPCircleMesh() {}
-	~DPCircleMesh() {}
+	DPEllipseMesh() {}
+	~DPEllipseMesh() {}
+	DPEllipseMesh& operator=(const DPEllipseMesh& InMesh);
 
 	void CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) override;
 	void CreateAtTopLeft(float InWidth, float InHeight, const Vector4& InColor, float InX = 0.0f, float InY = 0.0f) override;
+	MeshShape GetShape() override { return MeshShape::MS_Ellipse; }
 };

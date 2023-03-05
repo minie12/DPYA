@@ -25,7 +25,7 @@ public:
 	void ClearView();
 	bool PresentView();
 
-	bool Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, const DPArray<VertexData>& Vertices, const DPArray<unsigned int>& Indices, D3D11_PRIMITIVE_TOPOLOGY InTopology);
+	bool Draw(const Matrix4x4& InModelMatrix, const Matrix4x4& InViewMatrix, const DPArray<VertexData>& InVertices, const DPArray<unsigned int>& InIndices, D3D11_PRIMITIVE_TOPOLOGY InTopology);
 
 	static DPD3D* Get();
 

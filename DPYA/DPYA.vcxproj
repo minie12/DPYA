@@ -170,6 +170,7 @@
     <ClInclude Include="Engine\Source\Engine\Public\DPMesh.h" />
     <ClInclude Include="Engine\Source\Engine\Public\DPTimer.h" />
     <ClInclude Include="Engine\Source\Engine\Public\DPWindows.h" />
+    <ClInclude Include="TT\Source\Public\DPGameEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shader\PSShader.hlsl">
@@ -190,11 +191,13 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Source\Engine\Private\DPActor.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\DPD3D.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\DPEngine.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\DPMesh.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\LaunchWindow.cpp" />
     <ClCompile Include="Engine\Source\Engine\Private\DPWindows.cpp" />
+    <ClCompile Include="TT\Source\Private\DPGameEngine.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

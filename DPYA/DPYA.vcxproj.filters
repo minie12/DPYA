@@ -72,6 +72,9 @@
     <ClInclude Include="Engine\Source\Engine\Public\DPTimer.h">
       <Filter>Engine\Engine\Public</Filter>
     </ClInclude>
+    <ClInclude Include="TT\Source\Public\DPGameEngine.h">
+      <Filter>TT\Pubilc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shader\VSShader.hlsl">
@@ -96,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Source\Engine\Private\DPWindows.cpp">
       <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Engine\Private\DPActor.cpp">
+      <Filter>Engine\Engine\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="TT\Source\Private\DPGameEngine.cpp">
+      <Filter>TT\Private</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

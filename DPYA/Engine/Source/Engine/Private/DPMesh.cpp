@@ -1,10 +1,30 @@
 #include "DPMesh.h"
 
+#include "DPSmartPointer.h"
+
 DPMesh::DPMesh()
 	: Position(0.0f, 0.0f, 0.0f)
 	, Width(0.0f)
 	, Height(0.0f)
 { }
+DPMesh::DPMesh(const DPMesh& InMesh)
+{
+	DrawVertices = InMesh.GetVertices();
+	DrawIndices = InMesh.GetIndices();
+	Position = InMesh.GetPosition();
+	Width = InMesh.GetWidth();
+	Height = InMesh.GetHeight();
+}
+
+DPTriangleMesh& DPTriangleMesh::operator=(const DPTriangleMesh& InMesh)
+{
+	DrawVertices = InMesh.GetVertices();
+	DrawIndices = InMesh.GetIndices();
+	Position = InMesh.GetPosition();
+	Width = InMesh.GetWidth();
+	Height = InMesh.GetHeight();
+	return *this;
+}
 
 void DPTriangleMesh::CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX, float InY)
 {
@@ -35,6 +55,16 @@ void DPTriangleMesh::CreateAtTopLeft(float InWidth, float InHeight, const Vector
 	DrawIndices.Add(0);
 	DrawIndices.Add(1);
 	DrawIndices.Add(2);
+}
+
+DPRectangleMesh& DPRectangleMesh::operator=(const DPRectangleMesh& InMesh)
+{
+	DrawVertices = InMesh.GetVertices();
+	DrawIndices = InMesh.GetIndices();
+	Position = InMesh.GetPosition();
+	Width = InMesh.GetWidth();
+	Height = InMesh.GetHeight();
+	return *this;
 }
 
 void DPRectangleMesh::CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX, float InY)
@@ -74,7 +104,17 @@ void DPRectangleMesh::CreateAtTopLeft(float InWidth, float InHeight, const Vecto
 	DrawIndices.Add(3);
 }
 
-void DPCircleMesh::CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX, float InY)
+DPEllipseMesh& DPEllipseMesh::operator=(const DPEllipseMesh& InMesh)
+{
+	DrawVertices = InMesh.GetVertices();
+	DrawIndices = InMesh.GetIndices();
+	Position = InMesh.GetPosition();
+	Width = InMesh.GetWidth();
+	Height = InMesh.GetHeight();
+	return *this;
+}
+
+void DPEllipseMesh::CreateAtCenter(float InWidth, float InHeight, const Vector4& InColor, float InX, float InY)
 {
 	SetSize(InWidth, InHeight);
 
@@ -98,7 +138,7 @@ void DPCircleMesh::CreateAtCenter(float InWidth, float InHeight, const Vector4& 
 	}
 }
 
-void DPCircleMesh::CreateAtTopLeft(float InWidth, float InHeight, const Vector4 & InColor, float InX, float InY)
+void DPEllipseMesh::CreateAtTopLeft(float InWidth, float InHeight, const Vector4 & InColor, float InX, float InY)
 {
 	SetSize(InWidth, InHeight);
 

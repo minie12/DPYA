@@ -5,7 +5,7 @@
 #include "DPMesh.h"
 
 
-struct HLSLBuffer
+struct VSConstantBuffer
 {
 	DirectX::XMFLOAT4X4 ModelMatrix;
 	DirectX::XMFLOAT4X4 ViewMatrix;
@@ -254,7 +254,7 @@ bool DPD3D::Initialize(HWND HWnd, const unsigned int InWidth, const unsigned int
 	//ZeroMemory(&ConstantDesc, sizeof(D3D11_BUFFER_DESC));
 	//ConstantDesc.Usage = D3D11_USAGE_DYNAMIC;
 	//ConstantDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//ConstantDesc.ByteWidth = sizeof(HLSLBuffer);
+	//ConstantDesc.ByteWidth = sizeof(VSConstantBuffer);
 	//ConstantDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	//HResult = Device->CreateBuffer(&ConstantDesc, nullptr, &ConstantBuffer);
@@ -274,12 +274,9 @@ bool DPD3D::Initialize(HWND HWnd, const unsigned int InWidth, const unsigned int
 	//Device->CreateBlendState();
 	//DeviceContext->OMSetBlendState();
 
-	//DeviceContext->PSSetShaderResources();
+	//DeviceContext->PSSetShaderResources();*/
 
-	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	/*DeviceContext->OMSetRenderTargets(1, &RenderTargetView, 0);*/
-
-	ProjectionTM = DirectX::XMFLOAT4X4{ Matrix4x4::ScaleMatrix(fabsf(InWidth*0.5f), fabsf(InHeight*0.5f)).ToFloats() };
+	ProjectionTM = DirectX::XMFLOAT4X4{ Matrix4x4::ScaleMatrix(fabsf(1/(InWidth*0.5f)), fabsf(1/(InHeight*0.5f))).ToFloats() };
 
 
 	return true;
@@ -301,9 +298,37 @@ bool DPD3D::PresentView()
 	return true;
 }
 
-bool DPD3D::Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, const DPArray<VertexData>& Vertices, const DPArray<unsigned int>& Indices, D3D11_PRIMITIVE_TOPOLOGY InTopology)
+bool DPD3D::Draw(const Matrix4x4& InModelMatrix, const Matrix4x4& InViewMatrix, const DPArray<VertexData>& InVertices, const DPArray<unsigned int>& InIndices, D3D11_PRIMITIVE_TOPOLOGY InTopology)
 {
 	HRESULT HResult;
+
+	// Set constant buffer
+	VSConstantBuffer ConstantData;
+	ConstantData.ModelMatrix = DirectX::XMFLOAT4X4{ InModelMatrix.ToFloats() };
+	ConstantData.ViewMatrix = DirectX::XMFLOAT4X4{ InViewMatrix.ToFloats() };
+	ConstantData.ProjectionMatrix = ProjectionTM;
+
+	D3D11_BUFFER_DESC ConstantBufferDesc;
+	ZeroMemory(&ConstantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	ConstantBufferDesc.ByteWidth = sizeof(VSConstantBuffer);
+	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	ConstantBufferDesc.MiscFlags = 0;
+	ConstantBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA BufferData;
+	BufferData.pSysMem = &ConstantData;
+	BufferData.SysMemPitch = 0;
+	BufferData.SysMemSlicePitch = 0;
+
+	HResult = Device->CreateBuffer(&ConstantBufferDesc, &BufferData, &ConstantBuffer);
+	if (FAILED(HResult))
+	{
+		return false;
+	}
+
+	DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
 
 	DeviceContext->IASetPrimitiveTopology(InTopology);
 
@@ -312,13 +337,13 @@ bool DPD3D::Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, cons
 	{
 		D3D11_BUFFER_DESC VertexBufferDesc;
 		ZeroMemory(&VertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-		VertexBufferDesc.ByteWidth = sizeof(VertexData) * Vertices.Num();
+		VertexBufferDesc.ByteWidth = sizeof(VertexData) * InVertices.Num();
 		VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA VertexSubresourceData;
 		ZeroMemory(&VertexSubresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-		VertexSubresourceData.pSysMem = Vertices.Get();
+		VertexSubresourceData.pSysMem = InVertices.Get();
 		VertexSubresourceData.SysMemPitch = 0;
 		VertexSubresourceData.SysMemSlicePitch = 0;
 
@@ -335,13 +360,13 @@ bool DPD3D::Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, cons
 	{
 		D3D11_BUFFER_DESC IndexBufferDesc;
 		ZeroMemory(&IndexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-		IndexBufferDesc.ByteWidth = sizeof(unsigned int) * Indices.Num();
+		IndexBufferDesc.ByteWidth = sizeof(unsigned int) * InIndices.Num();
 		IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		//IndexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 		D3D11_SUBRESOURCE_DATA IndexSubresourceData;
-		IndexSubresourceData.pSysMem = Indices.Get();
+		IndexSubresourceData.pSysMem = InIndices.Get();
 		IndexSubresourceData.SysMemPitch = 0;
 		IndexSubresourceData.SysMemSlicePitch = 0;
 
@@ -362,7 +387,7 @@ bool DPD3D::Draw(const Matrix4x4& ModelMatrix, const Matrix4x4& ViewMatrix, cons
 	VertexBuffer->Release();
 	IndexBuffer->Release();
 
-	DeviceContext->DrawIndexed(Indices.Num(), 0, 0);
+	DeviceContext->DrawIndexed(InIndices.Num(), 0, 0);
 
 	return true;
 }

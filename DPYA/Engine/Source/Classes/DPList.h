@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DPActor.h"
+
 template<typename T>
 class DPList
 {
@@ -44,17 +46,17 @@ public:
 			: CurrentNode(InCurrent)
 		{ }
 
-		T operator*() const
+		T& operator*() const
 		{
 			return CurrentNode->Data;
 		}
 
-		iterator& operator++()
+		iterator& operator++(int _)
 		{
 			CurrentNode = CurrentNode->Next;
 			return *this;
 		}
-		iterator& operator--()
+		iterator& operator--(int _)
 		{
 			CurrentNode = CurrentNode->Prev;
 			return *this;

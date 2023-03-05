@@ -302,7 +302,7 @@ struct Matrix4x4
 		M41 = 0.f; M42 = 0.f; M43 = 0.f; M44 = 1.f;
 	}
 
-	float* ToFloats()
+	float* ToFloats() const
 	{
 		float* Temp = new float[16];
 

@@ -10,10 +10,31 @@ public:
 	{
 		Arr = new T[MaxSize];
 	}
+	DPArray(int InSize)
+		: MaxSize(InSize)
+		, ArrayCount(0)
+	{
+		Arr = new T[MaxSize];
+	}
 
 	~DPArray()
 	{
 		delete[] Arr;
+	}
+
+	DPArray& operator=(const DPArray& InArray)
+	{
+		SafeDeleteArray(Arr);
+
+		MaxSize = InArray.Num();
+		ArrayCount = InArray.Num();
+
+		Arr = new T[MaxSize];
+		for (unsigned int i = 0; i < InArray.Num(); i++)
+		{
+			Arr[i] = InArray[i];
+		}
+		return *this;
 	}
 
 	T& operator[] (int Index) const

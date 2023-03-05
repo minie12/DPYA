@@ -22,7 +22,7 @@ struct PS
 PS VSMain(VS Input)
 {
 	PS Output;
-	Output.Position = float4(Input.Position, 1.0f);
+	Output.Position = mul(mul(mul(float4(Input.Position, 1.0f), ModelMatrix), ViewMatrix), ProjectionMatrix);
 	Output.Color = Input.Color;
 	Output.UV = float2(0.0f, 0.0f);
 
